@@ -3,10 +3,13 @@ from random import choice
 
 import pygame
 
+from player import Player
+
 
 class Game:
     FPS = 60
     BG_COLORS = ["blue", "brown", "gray", "green", "pink", "purple", "yellow"]
+    PLAYER_NAMES = ["mask_dude", "ninja_frog", "pink_man", "virtual_guy"]
 
     def create_background(self):
         image = pygame.image.load(
@@ -25,6 +28,7 @@ class Game:
         self.background_color = choice(self.BG_COLORS)
         self.background = self.create_background()
         self.clock = pygame.time.Clock()
+        self.player = Player(100, 100, 50, 50, self, choice(self.PLAYER_NAMES))
 
     def draw_background(self):
         for image, position in self.background:
@@ -32,16 +36,17 @@ class Game:
 
     def draw(self):
         self.draw_background()
-        pygame.display.update()
+        self.player.draw()
 
     def run(self):
-        while self.run:
+        while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                     self.exit_game()
+            self.player.update()
             self.draw()
+            pygame.display.flip()
             self.clock.tick(self.FPS)
-        self.exit_game()
 
     def exit_game(self):
         pygame.quit()
