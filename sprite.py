@@ -41,13 +41,15 @@ class Sprite(pygame.sprite.Sprite):
             animations[image.replace(".png", "")] = sprites
         return animations
 
-    def animate(self):
+    def animate(self, flip_sprite=False):
         if self.status in self.animations:
             animation = self.animations[self.status]
             self.frame_index += self.animation_speed
             if self.frame_index >= len(animation):
                 self.frame_index = 0
             self.image = animation[int(self.frame_index)]
+            if flip_sprite:
+                self.image = pygame.transform.flip(self.image, True, False)
             self.rect = self.image.get_rect(topleft=(self.rect.x, self.rect.y))
             self.mask = pygame.mask.from_surface(self.image)
 
