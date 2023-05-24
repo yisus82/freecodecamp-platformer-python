@@ -6,8 +6,8 @@ from sprite import Sprite
 
 
 class Player(Sprite):
-    def __init__(self, x, y, width, height, game, name):
-        super().__init__(x, y, width, height, game,
+    def __init__(self, x, y, game, name):
+        super().__init__(x, y, game.PLAYER_WIDTH, game.PLAYER_HEIGHT, game,
                          "main_characters", name, animation_speed=0.5)
         self.speed = 5
         self.velocity = pygame.math.Vector2(0, 0)

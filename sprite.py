@@ -18,9 +18,6 @@ class Sprite(pygame.sprite.Sprite):
         self.image = self.animations[self.status][self.frame_index]
         self.mask = pygame.mask.from_surface(self.image)
 
-    def flip(sprites):
-        return [pygame.transform.flip(sprite, True, False) for sprite in sprites]
-
     def load_animations(self):
         path = join("assets", self.category, self.name)
         images = [filename for filename in listdir(
