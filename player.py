@@ -39,7 +39,9 @@ class Player(Sprite):
 
     def update_status(self):
         old_status = self.status
-        if self.velocity.x != 0:
+        if self.velocity.y > 0:
+            self.status = "fall"
+        elif self.velocity.x != 0:
             self.status = "run"
         else:
             self.status = "idle"

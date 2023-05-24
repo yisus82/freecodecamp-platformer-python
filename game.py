@@ -29,7 +29,7 @@ class Game:
         self.background_color = choice(self.BG_COLORS)
         self.background = self.create_background()
         self.clock = pygame.time.Clock()
-        self.player = Player(100, 100, 50, 50, self, choice(self.PLAYER_NAMES))
+        self.player = Player(100, 100, 32, 32, self, choice(self.PLAYER_NAMES))
 
     def draw_background(self):
         for image, position in self.background:

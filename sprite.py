@@ -5,8 +5,6 @@ import pygame
 
 
 class Sprite(pygame.sprite.Sprite):
-    TILESIZE = 32
-
     def __init__(self, x, y, width, height, game, category, name, initial_status="idle", animation_speed=0):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
@@ -31,11 +29,11 @@ class Sprite(pygame.sprite.Sprite):
         for image in images:
             sprite_sheet = pygame.image.load(join(path, image)).convert_alpha()
             sprites = []
-            for i in range(sprite_sheet.get_width() // self.TILESIZE):
+            for i in range(sprite_sheet.get_width() // self.rect.width):
                 surface = pygame.Surface(
-                    (self.TILESIZE, self.TILESIZE), pygame.SRCALPHA, depth=32)
-                rect = pygame.Rect(i * self.TILESIZE, 0,
-                                   self.TILESIZE, self.TILESIZE)
+                    (self.rect.width, self.rect.height), pygame.SRCALPHA, depth=32)
+                rect = pygame.Rect(i * self.rect.width, 0,
+                                   self.rect.width, self.rect.height)
                 surface.blit(sprite_sheet, (0, 0), rect)
                 sprites.append(pygame.transform.scale2x(surface))
             animations[image.replace(".png", "")] = sprites
