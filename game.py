@@ -8,6 +8,7 @@ from player import Player
 
 class Game:
     FPS = 60
+    GRAVITY = 1
     BG_COLORS = ["blue", "brown", "gray", "green", "pink", "purple", "yellow"]
     PLAYER_NAMES = ["mask_dude", "ninja_frog", "pink_man", "virtual_guy"]
 

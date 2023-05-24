@@ -12,6 +12,7 @@ class Player(Sprite):
         self.speed = 5
         self.velocity = pygame.math.Vector2(0, 0)
         self.flip_sprite = False
+        self.fall_counter = 0
 
     def move(self, dx=0, dy=0):
         self.rect.x += dx
@@ -45,8 +46,14 @@ class Player(Sprite):
         if old_status != self.status:
             self.frame_index = 0
 
+    def handle_gravity(self):
+        self.velocity.y += min(1, (self.fall_counter / self.game.FPS)
+                               * self.game.GRAVITY)
+        self.fall_counter += 1
+
     def update(self):
         self.handle_input()
         self.update_status()
+        self.handle_gravity()
         self.move(self.velocity.x, self.velocity.y)
         self.animate(self.flip_sprite)
