@@ -60,9 +60,9 @@ class Player(Sprite):
 
     def update_status(self):
         old_status = self.status
-        if self.velocity.y > 1:
+        if self.velocity.y > self.game.GRAVITY:
             self.status = "fall"
-        elif self.velocity.y < -1:
+        elif self.velocity.y < -self.game.GRAVITY:
             self.status = "jump" if self.jump_counter == 1 else "double_jump"
         elif self.velocity.x != 0:
             self.status = "run"

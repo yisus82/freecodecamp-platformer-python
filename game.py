@@ -40,8 +40,7 @@ class Game:
                       for i in range(-self.screen.get_width() // self.BLOCK_WIDTH, (self.screen.get_width() * 2) // self.BLOCK_WIDTH)]
         self.floor.append(Block(100, 300, self, 2))
         self.floor.append(Block(300, 500, self, 2))
-        self.floor.append(Block(500, 700, self, 2))
-        self.floor.append(Block(700, 900, self, 2))
+        self.floor.append(Block(500, 800, self, 2))
         self.obstacles = [*self.floor]
         self.player = Player(100, 100, self,
                              choice(self.PLAYER_NAMES), self.obstacles)
