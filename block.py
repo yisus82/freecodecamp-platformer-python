@@ -7,7 +7,7 @@ from object import Object
 
 class Block(Object):
     BLOCK_OFFSET_X = 96
-    BLOCK_OFFSET_Y = 10
+    BLOCK_OFFSET_Y = 14
     BLOCK_SPRITE_WIDTH = 50
     BLOCK_SPRITE_HEIGHT = 50
 

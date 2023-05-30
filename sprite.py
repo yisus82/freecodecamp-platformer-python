@@ -46,7 +46,6 @@ class Sprite(pygame.sprite.Sprite):
             if flip_sprite:
                 self.image = pygame.transform.flip(self.image, True, False)
             self.rect = self.image.get_rect(topleft=(self.rect.x, self.rect.y))
-            self.mask = pygame.mask.from_surface(self.image)
 
     def draw(self):
         self.game.screen.blit(self.image, self.rect)

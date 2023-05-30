@@ -6,13 +6,19 @@ from sprite import Sprite
 
 
 class Player(Sprite):
-    def __init__(self, x, y, game, name):
+    def __init__(self, x, y, game, name, obstacles):
         super().__init__(x, y, game.PLAYER_WIDTH, game.PLAYER_HEIGHT, game,
                          "main_characters", name, animation_speed=0.5)
+        self.obstacles = obstacles
         self.speed = 5
         self.velocity = pygame.math.Vector2(0, 0)
         self.flip_sprite = False
-        self.fall_counter = 0
+        self.grounded = False
+        self.jump_force = 15
+        self.jump_counter = 0
+        self.jumping = False
+        self.jump_time = 0
+        self.jump_cooldown = 400
 
     def move(self, dx=0, dy=0):
         self.rect.x += dx
@@ -26,21 +32,38 @@ class Player(Sprite):
         self.velocity.x = self.speed
         self.flip_sprite = False
 
+    def jump(self):
+        if self.jumping:
+            return
+        self.jumping = True
+        if self.grounded:
+            self.velocity.y = -self.jump_force / self.game.GRAVITY
+            self.jump_counter = 1
+            self.grounded = False
+            self.jump_time = pygame.time.get_ticks()
+        elif self.jump_counter < 2:
+            self.velocity.y = -self.jump_force / self.game.GRAVITY
+            self.jump_counter += 1
+            self.jump_time = pygame.time.get_ticks()
+
     def handle_input(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT or pygame.K_a] and keys[pygame.K_RIGHT or pygame.K_d]:
+        self.velocity.x = 0
+        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
             self.velocity.x = 0
-        elif keys[pygame.K_LEFT or pygame.K_a]:
+        elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
             self.move_left()
-        elif keys[pygame.K_RIGHT or pygame.K_d]:
+        elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             self.move_right()
-        else:
-            self.velocity.x = 0
+        if keys[pygame.K_SPACE] or keys[pygame.K_UP] or keys[pygame.K_w]:
+            self.jump()
 
     def update_status(self):
         old_status = self.status
-        if self.velocity.y > 0:
+        if self.velocity.y > 1:
             self.status = "fall"
+        elif self.velocity.y < -1:
+            self.status = "jump" if self.jump_counter == 1 else "double_jump"
         elif self.velocity.x != 0:
             self.status = "run"
         else:
@@ -49,13 +72,34 @@ class Player(Sprite):
             self.frame_index = 0
 
     def handle_gravity(self):
-        self.velocity.y += min(1, (self.fall_counter / self.game.FPS)
-                               * self.game.GRAVITY)
-        self.fall_counter += 1
+        if not self.grounded:
+            self.velocity.y += self.game.GRAVITY
+            if self.velocity.y > self.game.MAX_GRAVITY:
+                self.velocity.y = self.game.MAX_GRAVITY
+
+    def check_vertical_collisions(self):
+        self.grounded = False
+        for obstacle in self.obstacles:
+            if pygame.sprite.collide_mask(self, obstacle):
+                if self.velocity.y > 0:
+                    self.rect.bottom = obstacle.rect.top
+                    self.velocity.y = 0
+                    self.grounded = True
+                    self.jump_counter = 0
+                elif self.velocity.y < 0:
+                    self.rect.top = obstacle.rect.bottom
+                    self.velocity.y = -self.velocity.y
+
+    def handle_cooldowns(self):
+        current_time = pygame.time.get_ticks()
+        if self.jumping and current_time - self.jump_time > self.jump_cooldown:
+            self.jumping = False
 
     def update(self):
-        self.handle_input()
-        self.update_status()
         self.handle_gravity()
+        self.handle_cooldowns()
+        self.handle_input()
         self.move(self.velocity.x, self.velocity.y)
+        self.check_vertical_collisions()
+        self.update_status()
         self.animate(self.flip_sprite)

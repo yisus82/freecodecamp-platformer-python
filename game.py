@@ -10,6 +10,7 @@ from player import Player
 class Game:
     FPS = 60
     GRAVITY = 1
+    MAX_GRAVITY = 30
     BLOCK_WIDTH = 96
     BLOCK_HEIGHT = 96
     PLAYER_WIDTH = 32
@@ -35,10 +36,15 @@ class Game:
         self.background = self.create_background()
         self.block_type = randint(0, 2)
         self.clock = pygame.time.Clock()
-        self.player = Player(100, 100, self,
-                             choice(self.PLAYER_NAMES))
         self.floor = [Block(i * self.BLOCK_WIDTH, self.screen.get_height() - self.BLOCK_HEIGHT, self, self.block_type)
                       for i in range(-self.screen.get_width() // self.BLOCK_WIDTH, (self.screen.get_width() * 2) // self.BLOCK_WIDTH)]
+        self.floor.append(Block(100, 300, self, 2))
+        self.floor.append(Block(300, 500, self, 2))
+        self.floor.append(Block(500, 700, self, 2))
+        self.floor.append(Block(700, 900, self, 2))
+        self.obstacles = [*self.floor]
+        self.player = Player(100, 100, self,
+                             choice(self.PLAYER_NAMES), self.obstacles)
 
     def draw_background(self):
         for image, position in self.background:
