@@ -24,12 +24,18 @@ class Player(Sprite):
         self.rect.x += dx
         self.rect.y += dy
 
-    def move_left(self):
-        self.velocity.x = -self.speed
+    def move_left(self, running=False):
+        if running:
+            self.velocity.x = -self.speed * 2
+        else:
+            self.velocity.x = -self.speed
         self.flip_sprite = True
 
-    def move_right(self):
-        self.velocity.x = self.speed
+    def move_right(self, running=False):
+        if running:
+            self.velocity.x = self.speed * 2
+        else:
+            self.velocity.x = self.speed
         self.flip_sprite = False
 
     def jump(self):
@@ -52,9 +58,15 @@ class Player(Sprite):
         if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and (keys[pygame.K_RIGHT] or keys[pygame.K_d]):
             self.velocity.x = 0
         elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            self.move_left()
+            if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
+                self.move_left(running=True)
+            else:
+                self.move_left()
         elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            self.move_right()
+            if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
+                self.move_right(running=True)
+            else:
+                self.move_right()
         if keys[pygame.K_SPACE] or keys[pygame.K_UP] or keys[pygame.K_w]:
             self.jump()
 

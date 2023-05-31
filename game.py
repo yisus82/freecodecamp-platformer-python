@@ -15,6 +15,7 @@ class Game:
     BLOCK_HEIGHT = 96
     PLAYER_WIDTH = 32
     PLAYER_HEIGHT = 32
+    SCROLL_AREA_WIDTH = 200
     BG_COLORS = ["blue", "brown", "gray", "green", "pink", "purple", "yellow"]
     PLAYER_NAMES = ["mask_dude", "ninja_frog", "pink_man", "virtual_guy"]
 
@@ -44,6 +45,7 @@ class Game:
         self.obstacles = [*self.floor]
         self.player = Player(100, 100, self,
                              choice(self.PLAYER_NAMES), self.obstacles)
+        self.offset_x = 0
 
     def draw_background(self):
         for image, position in self.background:
@@ -64,6 +66,9 @@ class Game:
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                     self.exit_game()
             self.player.update()
+            if ((self.player.rect.right - self.offset_x >= self.screen.get_width() - self.SCROLL_AREA_WIDTH) and self.player.velocity.x > 0) or (
+                    (self.player.rect.left - self.offset_x <= self.SCROLL_AREA_WIDTH) and self.player.velocity.x < 0):
+                self.offset_x += self.player.velocity.x
             self.draw()
             pygame.display.flip()
             self.clock.tick(self.FPS)

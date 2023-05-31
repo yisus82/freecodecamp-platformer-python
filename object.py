@@ -10,4 +10,5 @@ class Object(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
 
     def draw(self):
-        self.game.screen.blit(self.image, self.rect)
+        self.game.screen.blit(
+            self.image, (self.rect.x - self.game.offset_x, self.rect.y))

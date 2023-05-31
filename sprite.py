@@ -48,4 +48,5 @@ class Sprite(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(topleft=(self.rect.x, self.rect.y))
 
     def draw(self):
-        self.game.screen.blit(self.image, self.rect)
+        self.game.screen.blit(
+            self.image, (self.rect.x - self.game.offset_x, self.rect.y))
