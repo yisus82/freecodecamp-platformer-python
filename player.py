@@ -72,9 +72,9 @@ class Player(Sprite):
 
     def update_status(self):
         old_status = self.status
-        if self.velocity.y > self.game.GRAVITY:
+        if self.velocity.y > self.game.GRAVITY * 2:
             self.status = "fall"
-        elif self.velocity.y < -self.game.GRAVITY:
+        elif self.velocity.y < -self.game.GRAVITY * 2:
             self.status = "jump" if self.jump_counter == 1 else "double_jump"
         elif self.velocity.x != 0:
             self.status = "run"
@@ -88,6 +88,12 @@ class Player(Sprite):
             self.velocity.y += self.game.GRAVITY
             if self.velocity.y > self.game.MAX_GRAVITY:
                 self.velocity.y = self.game.MAX_GRAVITY
+
+    def check_horizontal_collisions(self):
+        for obstacle in self.obstacles:
+            if pygame.sprite.collide_mask(self, obstacle):
+                self.move(-self.velocity.x, 0)
+                break
 
     def check_vertical_collisions(self):
         self.grounded = False
@@ -112,6 +118,7 @@ class Player(Sprite):
         self.handle_cooldowns()
         self.handle_input()
         self.move(self.velocity.x, self.velocity.y)
+        self.check_horizontal_collisions()
         self.check_vertical_collisions()
         self.update_status()
         self.animate(self.flip_sprite)

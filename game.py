@@ -39,10 +39,13 @@ class Game:
         self.clock = pygame.time.Clock()
         self.floor = [Block(i * self.BLOCK_WIDTH, self.screen.get_height() - self.BLOCK_HEIGHT, self, self.block_type)
                       for i in range(-self.screen.get_width() // self.BLOCK_WIDTH, (self.screen.get_width() * 2) // self.BLOCK_WIDTH)]
-        self.floor.append(Block(100, 300, self, 2))
-        self.floor.append(Block(300, 500, self, 2))
-        self.floor.append(Block(500, 800, self, 2))
-        self.obstacles = [*self.floor]
+        self.blocks = []
+        self.blocks.append(Block(100, 300, self, 2))
+        self.blocks.append(Block(300, 500, self, 2))
+        self.blocks.append(Block(500, 800, self, 2))
+        self.blocks.append(
+            Block(0, self.screen.get_height() - self.BLOCK_HEIGHT * 2, self, 1))
+        self.obstacles = [*self.floor, *self.blocks]
         self.player = Player(100, 100, self,
                              choice(self.PLAYER_NAMES), self.obstacles)
         self.offset_x = 0
@@ -55,9 +58,14 @@ class Game:
         for block in self.floor:
             block.draw()
 
+    def draw_blocks(self):
+        for block in self.blocks:
+            block.draw()
+
     def draw(self):
         self.draw_background()
         self.draw_floor()
+        self.draw_blocks()
         self.player.draw()
 
     def run(self):

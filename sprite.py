@@ -45,6 +45,7 @@ class Sprite(pygame.sprite.Sprite):
             self.image = animation[int(self.frame_index)]
             if flip_sprite:
                 self.image = pygame.transform.flip(self.image, True, False)
+            self.mask = pygame.mask.from_surface(self.image)
             self.rect = self.image.get_rect(topleft=(self.rect.x, self.rect.y))
 
     def draw(self):
